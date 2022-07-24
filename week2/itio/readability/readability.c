@@ -38,10 +38,9 @@ int word_count(string str) {
 int word_one_character(string str) {
 	int count = 0;
 	for (int i = 0; str[i] != '\0'; i++) {
-		if (('a' <= str[i] && str[i] <= 'z')
-			|| ('A' <= str[i] && str[i] <= 'Z')) {
-				count++;
-			}
+		if (('a' <= str[i] && str[i] <= 'z') || ('A' <= str[i] && str[i] <= 'Z')) {
+			count++;
+		}
 	}
 	return count;
 }
@@ -50,8 +49,8 @@ int word_sentence(string str) {
 	int count = 0;
 	for (int i = 0; str[i] != '\0'; i++) {
 		if (str[i] == '.' || str[i] == '!' || str[i] == '?') {
-				count++;
-			}
+			count++;
+		}
 	}
 	return count;
 }
@@ -64,7 +63,7 @@ double average_calc(int word, int charOrSentence) {
 }
 
 void output_grade(double index) {
-	if (index < 1.5) printf("Before Grade 1\n");// 例外１
+	if (index < 1.5) printf("Before Grade 1\n");
 	else if (1.5 <= index && index < 2.5) printf("Grade 2\n");
 	else if (2.5 <= index && index < 3.5) printf("Grade 3\n");
 	else if (3.5 <= index && index < 4.5) printf("Grade 4\n");
@@ -79,7 +78,7 @@ void output_grade(double index) {
 	else if (12.5 <= index && index < 13.5) printf("Grade 13\n");
 	else if (13.5 <= index && index < 14.5) printf("Grade 14\n");
 	else if (14.5 <= index && index < 15.5) printf("Grade 15\n");
-	else if (15.5 <= index) printf("Grade 16+\n");// 例外２
+	else if (15.5 <= index) printf("Grade 16+\n");
 }
 
 /* 問題概要入力された文章の読解レベルを、何年生レベルかで算出するプログラム */
