@@ -5,4 +5,5 @@ Week1 mario完了
 
 Week1 credit完了
 
-Week1 readbility着手中
+Week1 readbility着手中（7/24~）
+
