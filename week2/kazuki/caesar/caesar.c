@@ -1,43 +1,108 @@
 #include <cs50.h>
 #include <stdio.h>
+#include<stdbool.h>
+#include<stdlib.h>
 
-int is_alphabet_input(string str);
+int is_valid_input(int argc, string argv);
+int create_cipheruppertext(string str, int number_argv);
+int create_cipherlowertext(string str, int number_argv);
 
 int main(int argc, string argv[])
 {
+    char ciphertext[256];
+
     printf ("argv[1]:%s\n", argv[1]);
+
+    if(!is_valid_input(argc, *argv))//入力値が正しいかどうかを聞いているので、1(true)を返してくれば正しい
+    {
+        printf("Usage: ./caesar key\n");
+        return 1;
+    }
+
     string str = get_string ("plaintext:");
     printf ("文字列:%s\n", str);
 
-    int alphabet_number  = is_alphabet_input(str);
-    printf("alphabet_number:%d\n", alphabet_number);
-}
+    int number_argv = atoi(argv[1]);
+    create_cipheruppertext(str, number_argv);
+    create_cipherlowertext(str, number_argv);
 
-int is_alphabet_input(string str)
-{
-    char lower_word[26] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-    char upper_word[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    printf("%d\n", create_cipheruppertext);//←ここの処理で、つまづき中
+    printf("%d\n", create_cipheruppertext);//←ここの処理で、つまづき中
 
-    for(int i = 0; str[i] != '\0'; i++)
-    {
-        for(int j = 0; lower_word[j] != '\0'; j++)
-        {
-            if(str[i] == lower_word[j])
-            {
-                printf("lower_word[%d]: %c\n", j, lower_word[j]);
-            }
-        }
+    // printf("ciphertext:%s\n", ciphertext);
 
-        for(int k = 0; upper_word[k] != '\0'; k++)
-        {
-            if(str[i] == upper_word[k])
-            {
-                printf("upper_word[%d]: %c\n", k, upper_word[k]);
-            }
-        }
-    }
     return 0;
 }
+
+int is_valid_input(int argc, string argv)
+{
+    printf("argc:%d\n argv:%s\n", argc, argv);
+    if(argc == '\0' || 2 < argc)
+        return 0;
+    else
+        return 1;
+}
+
+int create_cipheruppertext(string str, int number_argv)
+{
+    int ciphertext_uppersum;
+    printf("ciphertext(文字列):%s\n", str);
+    printf("number_argv(整数):%d\n", number_argv);
+    for(int i = 0; str[i] != '\0'; i++ )
+    {
+        if('a' <= str[i] && str[i] <= 'z')
+        {
+            int cipher_upperword = str[i] - 'a';
+            ciphertext_uppersum = cipher_upperword + number_argv;
+            printf("cipher_upperword:%d\n", cipher_upperword);
+            printf("ciphertext_sum:%d\n", ciphertext_uppersum);
+        }
+    }
+    return ciphertext_uppersum;
+}
+
+int create_cipherlowertext(string str, int number_argv)
+{
+    int ciphertext_lowersum;
+    for(int i = 0; str[i] != '\0'; i++ )
+    {
+        if('A' <= str[i] && str[i] <= 'Z')
+        {
+            int cipher_lowerword = str[i] - 'A'//ci = (pi + k) % 26
+            ciphertext_lowersum = cipher_lowerword + number_argv;
+            printf("cipher_lowerword:%d\n", cipher_lowerword);
+            printf("ciphertext_lowersum:%d\n", ciphertext_lowersum);
+        }
+    }
+    return ciphertext_lowersum;
+}
+
+/*
+|| (argv <= '0' || '127' <= arg)
+【全体の処理の流れ】 = main関数に関わってくるところ
+1.まず始めの処理として、整数値をコマンドライン引数として受け取る(k)○
+■プログラムは、1 つのコマンドライン引数 (負でない整数) を受け入れる必要があります○
+■プログラムをコマンドライン引数なしで、または複数のコマンドライン引数を指定して実行した場合、プログラムはエラーメッセージ (printfで) を出力し、
+mainから値1 (エラーを示す) をすぐに返します。○
+■コマンドライン引数の文字のいずれかが10進数でない場合、プログラムは"Usage: ./caesar key"というメッセージを出力し、mainから値1が返されます。○
+※is_valid_inputで上記処理と一緒に書いてしまう
+■プログラムをコマンドライン引数なしで、または複数のコマンドライン引数を指定して実行した場合またはコマンドライン引数の文字のいずれかが10進数でない場合の処理
+2."plaintext:"が出力されて、入力する文字を'ABC'として、文字列として受け取る（pi）○
+3.受け取った文字列ABCを受け取った整数値分だけずらす
+■プログラムは (改行なしの) plaintext:を出力し、ユーザに (get_stringを使って) プレーンテキストのstringを要求しなければなりません。○
+■プログラムは (改行なしで) ciphertext:を出力しなければなりません。 平文と対応する暗号文が続き、平文中のアルファベット文字がそれぞれkずつ 「ずれて」 出力されます。
+アルファベット以外の文字はそのまま出力されます。
+■プログラムは大文字と小文字を保持する必要があります。大文字はずらしても大文字のままである必要があります。小文字はずらしても小文字のままである必要があります。
+4.整数値分ずらした文字列を出力
+■暗号文を出力した後、改行を出力する必要があります。プログラムはmainに0を返して終了するはずです。
+
+[create_ciphertextの処理の流れ]
+・アスキーコードを使用していく
+・”A"または"a"から、入力された文字を引くことで、何番目にあるのかわかる○
+・argvの文字列→整数へ変換する（atoi）○
+・大文字の時と小文字の時は、処理を分けると書きやすいかも？
+→関数名を切り分けるとreturn文で返しやすくなる
+*/
 
 /*
 ・受け取ってきた文字列を、lower or upperと比較して、その配列の要素番号を抽出..できるのか？
@@ -63,12 +128,24 @@ ci = (pi + k) % 26
 つまり、z→aとなる
 
 【処理】
-1.まず始めの処理として、整数値を1をコマンドライン引数として受け取る(k)○
-2.入力される文字を'ABC'として、文字列として受け取る（pi）○
-3.aまたはAを配列の要素[0]番目とする(多分、初期化)○
+==================
+$ ./caesar 1
+plaintext:  ABC
+ciphertext: BCD
+==================
+【全体の処理の流れ】 = main関数に関わってくるところ
+1.まず始めの処理として、整数値の1をコマンドライン引数として受け取る(k)○
+■プログラムは、1 つのコマンドライン引数 (負でない整数) を受け入れる必要があります。呼びましょう議論のために。
+■プログラムがコマンドライン引数なしで実行された場合、または複数のコマンドライン引数を使用して実行された場合、プログラムは選択したエラー メッセージ ( を使用) を出力し、 (エラーを示す傾向がある)の値printfからすぐに戻る必要があります。main1
+■コマンド ライン引数のいずれかの文字が 10 進数でない場合、プログラムはメッセージを出力し、値Usage: ./caesar keyから を返す必要があります。main1
+2."plaintext:"が出力されて、入力する文字を'ABC'として、文字列として受け取る（pi）○
+3.受け取った文字列ABCを受け取った整数値分だけずらす
+4.整数値分ずらした文字列を出力
+
+aまたはAを配列の要素[0]番目とする(多分、初期化)○
 →A[0]B[1]C[2]...Z[25]
 4.受け取ってきた値が、aだった場合、「aだから、[0]番目だ！」とわかるようにしたい
-1.大文字か 2.小文字か 3.それ以外か
+→1.大文字か 2.小文字か 3.それ以外か
 →受け取ってきた文字列が、事前に用意した配列の要素番号と比較した時に、等しい場合その配列の要素番号を抽出するとか？
 →受け取った文字列は、計算によって、ciを求めることができるので、事前に用意した配列の要素とマッチすれば、その数字を出力することができる
 5.受け取った文字列が英字の場合、ci = (pi + k) % 26の計算を行い、ciを求める
