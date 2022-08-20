@@ -4,8 +4,7 @@
 #include<stdlib.h>
 
 int is_valid_input(int argc, string argv);
-int create_cipheruppertext(string str, int number_argv);
-int create_cipherlowertext(string str, int number_argv);
+string create_ciphertext(string str, int number_argv);
 
 int main(int argc, string argv[])
 {
@@ -23,13 +22,8 @@ int main(int argc, string argv[])
     printf ("文字列:%s\n", str);
 
     int number_argv = atoi(argv[1]);
-    create_cipheruppertext(str, number_argv);
-    create_cipherlowertext(str, number_argv);
 
-    printf("%d\n", create_cipheruppertext);//←ここの処理で、つまづき中
-    printf("%d\n", create_cipheruppertext);//←ここの処理で、つまづき中
-
-    // printf("ciphertext:%s\n", ciphertext);
+    printf("ciphertext:%s\n", create_ciphertext(str, number_argv));
 
     return 0;
 }
@@ -37,48 +31,48 @@ int main(int argc, string argv[])
 int is_valid_input(int argc, string argv)
 {
     printf("argc:%d\n argv:%s\n", argc, argv);
-    if(argc == '\0' || 2 < argc)
+    if(argc == '\0' || 2 < argc)//←最後の例外処理で、つまづき中
         return 0;
     else
         return 1;
 }
 
-int create_cipheruppertext(string str, int number_argv)
+string create_ciphertext(string str, int number_argv)
 {
-    int ciphertext_uppersum;
-    printf("ciphertext(文字列):%s\n", str);
-    printf("number_argv(整数):%d\n", number_argv);
+    int ciphertext_uppershift;
+    int ciphertext_lowershift;
+
     for(int i = 0; str[i] != '\0'; i++ )
     {
         if('a' <= str[i] && str[i] <= 'z')
         {
             int cipher_upperword = str[i] - 'a';
-            ciphertext_uppersum = cipher_upperword + number_argv;
-            printf("cipher_upperword:%d\n", cipher_upperword);
-            printf("ciphertext_sum:%d\n", ciphertext_uppersum);
-        }
-    }
-    return ciphertext_uppersum;
-}
+            ciphertext_uppershift = (cipher_upperword + number_argv) % 26;
+            str[i]= 'a' + ciphertext_uppershift;
 
-int create_cipherlowertext(string str, int number_argv)
-{
-    int ciphertext_lowersum;
-    for(int i = 0; str[i] != '\0'; i++ )
-    {
-        if('A' <= str[i] && str[i] <= 'Z')
+            printf("cipher_upperword:%d\n", cipher_upperword);
+            printf("ciphertext_sum:%d\n", ciphertext_uppershift);
+            printf("str:%s\n", str);
+        }
+        else if('A' <= str[i] && str[i] <= 'Z')
         {
-            int cipher_lowerword = str[i] - 'A'//ci = (pi + k) % 26
-            ciphertext_lowersum = cipher_lowerword + number_argv;
+            int cipher_lowerword = str[i] - 'A';//ci = (pi + k) % 26
+            ciphertext_lowershift = (cipher_lowerword + number_argv) % 26;
+            str[i]= 'A' + ciphertext_lowershift;
+
             printf("cipher_lowerword:%d\n", cipher_lowerword);
-            printf("ciphertext_lowersum:%d\n", ciphertext_lowersum);
+            printf("ciphertext_lowersum:%d\n", ciphertext_lowershift);
+            printf("str:%s\n", str);
+        }
+        else
+        {
+            str[i] = str[i];
         }
     }
-    return ciphertext_lowersum;
+    return str;
 }
 
 /*
-|| (argv <= '0' || '127' <= arg)
 【全体の処理の流れ】 = main関数に関わってくるところ
 1.まず始めの処理として、整数値をコマンドライン引数として受け取る(k)○
 ■プログラムは、1 つのコマンドライン引数 (負でない整数) を受け入れる必要があります○
@@ -90,9 +84,9 @@ mainから値1 (エラーを示す) をすぐに返します。○
 2."plaintext:"が出力されて、入力する文字を'ABC'として、文字列として受け取る（pi）○
 3.受け取った文字列ABCを受け取った整数値分だけずらす
 ■プログラムは (改行なしの) plaintext:を出力し、ユーザに (get_stringを使って) プレーンテキストのstringを要求しなければなりません。○
-■プログラムは (改行なしで) ciphertext:を出力しなければなりません。 平文と対応する暗号文が続き、平文中のアルファベット文字がそれぞれkずつ 「ずれて」 出力されます。
-アルファベット以外の文字はそのまま出力されます。
-■プログラムは大文字と小文字を保持する必要があります。大文字はずらしても大文字のままである必要があります。小文字はずらしても小文字のままである必要があります。
+■プログラムは (改行なしで) ciphertext:を出力しなければなりません。 平文と対応する暗号文が続き、平文中のアルファベット文字がそれぞれkずつ 「ずれて」 出力されます。○
+アルファベット以外の文字はそのまま出力されます。○
+■プログラムは大文字と小文字を保持する必要があります。大文字はずらしても大文字のままである必要があります。小文字はずらしても小文字のままである必要があります。○
 4.整数値分ずらした文字列を出力
 ■暗号文を出力した後、改行を出力する必要があります。プログラムはmainに0を返して終了するはずです。
 
@@ -101,7 +95,9 @@ mainから値1 (エラーを示す) をすぐに返します。○
 ・”A"または"a"から、入力された文字を引くことで、何番目にあるのかわかる○
 ・argvの文字列→整数へ変換する（atoi）○
 ・大文字の時と小文字の時は、処理を分けると書きやすいかも？
-→関数名を切り分けるとreturn文で返しやすくなる
+→関数名を切り分けるとreturn文で返しやすくなる○
+・何番目かわかったら次は出力をする文字を特定
+
 */
 
 /*
