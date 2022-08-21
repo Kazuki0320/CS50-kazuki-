@@ -3,7 +3,7 @@
 #include<stdbool.h>
 #include<stdlib.h>
 
-int is_valid_input(int argc, string argv);
+int is_valid_input(int argc, string input_str);
 string create_ciphertext(string str, int number_argv);
 
 int main(int argc, string argv[])
@@ -12,29 +12,34 @@ int main(int argc, string argv[])
 
     printf ("argv[1]:%s\n", argv[1]);
 
-    if(!is_valid_input(argc, *argv))//入力値が正しいかどうかを聞いているので、1(true)を返してくれば正しい
+    if(is_valid_input(argc, argv[1]) == 0)//入力値が正しいかどうかを聞いているので、1(true)を返してくれば正しい
     {
         printf("Usage: ./caesar key\n");
         return 1;
     }
 
+    int number_argv = atoi(argv[1]);
+
     string str = get_string ("plaintext:");
     printf ("文字列:%s\n", str);
-
-    int number_argv = atoi(argv[1]);
 
     printf("ciphertext:%s\n", create_ciphertext(str, number_argv));
 
     return 0;
 }
 
-int is_valid_input(int argc, string argv)
+int is_valid_input(int argc, string input_str)
 {
-    printf("argc:%d\n argv:%s\n", argc, argv);
-    if(argc == '\0' || 2 < argc)//←最後の例外処理で、つまづき中
-        return 0;
-    else
-        return 1;
+    // printf("argc:%d\n input_str:%s\n", argc, input_str);
+
+    if(argc == 1 || 2 < argc)return 0;
+
+    for(int i = 0; input_str[i] != '\0'; i++)
+    {
+        if(input_str[i] < '0' || '9' < input_str[i])
+            return 0;
+    }
+    return 1;
 }
 
 string create_ciphertext(string str, int number_argv)
@@ -98,6 +103,9 @@ mainから値1 (エラーを示す) をすぐに返します。○
 →関数名を切り分けるとreturn文で返しやすくなる○
 ・何番目かわかったら次は出力をする文字を特定
 
+　【現状困っていること】
+・大文字と小文字の処理を分けているため、両方出力されている
+→
 */
 
 /*
