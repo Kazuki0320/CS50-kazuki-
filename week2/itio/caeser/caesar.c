@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 bool check_argv(string numStr);
+bool check_range_azAZ(char input_char);
+char convert_char(char plain_text, int argv);
 string cesar_slide(string input_str, string inputStr);
 
 int main(int argc, string argv[])
@@ -72,12 +74,12 @@ string cesar_slide(string argv, string input_str)
 
 /*
 とりあえず、一文字ずつシーザーNumの分ずらしていこう。
-問題は、アルファベット以外にどう対処するか。
+問題は、アルファベット以外にどう対処するかとsargvが26, 52以上の大きい値だった場合
 if文で大文字か小文字の範囲内かを判定する関数を作る
 んで、範囲内だったらずらす関数に入れてcharをずらす
 範囲外ならそのままの文字を連結
 みたいな感じでイケそう。
 
 とりあえず、まず、string cesar_slide(string inputStr);
-を作ろう。
+えお作ろう。
 */
