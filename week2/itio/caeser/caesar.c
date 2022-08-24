@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool check_argv(string numStr);
+bool check_argv(string num_str);
 bool check_range_azAZ(char input_char);
 char convert_char(char plain_text, int argv);
-string cesar_slide(string input_str, string inputStr);
+string cesar_slide(string input_str, string input_str);
 
 int main(int argc, string argv[])
 {
